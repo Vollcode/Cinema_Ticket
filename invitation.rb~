@@ -1,0 +1,18 @@
+require 'rubygems'
+require 'sinatra'
+require 'data_mapper'
+
+
+get '/' do
+ "Welcome to our invitation movie service, please proceed to fill our form to obtain the invitation you want!"
+ erb :logo
+end
+
+get '/form' do
+ "Nombre completo" 
+  erb :form
+end
+
+not_found do 
+	halt 404, 'La cagaste amego'
+end
