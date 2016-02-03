@@ -2,20 +2,21 @@ require 'rubygems'
 require 'sinatra'
 require 'pony'
 
-SITE_TITLE = "Invitation_Sender"
+SITE_TITLE = "Invitation Sender"
 SITE_DESCRIPTION = "The best ticket sender service"	
 
-    Pony.options = {
+	Pony.options = {
       :via => :smtp,
       :via_options => {
         :address => 'smtp.sendgrid.net',
         :port => '587',
-        :domain => 'myapp.com',
+        :domain => 'heroku.com',
         :user_name => ENV['SENDGRID_USERNAME'],
         :password => ENV['SENDGRID_PASSWORD'],
         :authentication => :plain,
         :enable_starttls_auto => true
       }
+}
 
 get '/' do
  erb :logo
@@ -29,18 +30,20 @@ get '/error' do
   erb :error
 end
 
-get '/confirm' do
- erb :confirm
-end
-
 post '/form' do
+  ticket_id = Time.now.to_i
+  
   @name = params[:name]
   @email = params[:email]
   @phone = params[:phone]
   @movie = params[:movie]
-  @ticket = params[:ticket]
+  @price = params[:price]
 
-  erb :index, :locals => {'name' => @name, 'email' => @email, 'phone' => @phone, 'movie' => @movie, 'ticket' => @ticket}
+  Pony.mail(:subject=> 'Ticket Confirmation ' , 
+    	:to => "#{@email}", 
+    	:body => "Thank you for buying through Invitation Sender. Your ticket code is #{ticket_id}" )
+ 
+#  erb :index, :locals => {'name' => @name, 'email' => @email, 'phone' => @phone, 'movie' => @movie, 'price' => @price}
 
 end
 
