@@ -41,12 +41,22 @@ post '/form' do
 
   Pony.mail(:subject=> 'Ticket Confirmation ' , 
     	:to => "#{@email}", 
-    	:body => "Thank you for buying through Invitation Sender. Your ticket code is #{ticket_id}" )
- 
-#  erb :index, :locals => {'name' => @name, 'email' => @email, 'phone' => @phone, 'movie' => @movie, 'price' => @price}
+    	:html_body => "Thank you for buying through Invitation Sender. Please click on the following link to see the information you've selected. <a href='http://localhost:9393/form/infoticket/#{@name}/#{@email}/#{@phone}/#{@movie}/#{@price}'>Your Information</a> ")
+        
+
+  erb :index, :locals => {'name' => @name, 'email' => @email, 'phone' => @phone, 'movie' => @movie, 'price' => @price}
 
 end
 
+get '/form/infoticket/:name/:email/:phone/:movie/:price' do
+  @name = params[:name].gsub('+',' ')
+  @email = params[:email].gsub('+',' ')
+  @phone = params[:phone].gsub('+',' ')
+  @movie = params[:movie].gsub('+',' ')
+  @price = params[:price].gsub('+',' ')
+  erb :confirm
+end
+
 not_found do 
-	halt 404, 'Por ahí no sigas'
+	halt 404, "Don't go in there"
 end
