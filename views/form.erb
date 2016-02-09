@@ -1,32 +1,31 @@
 <h3>Nombre Completo</h3>
 <form action="/form" method="post">
-  <input type="text" name="name">
+  <input type="text" name="name" required>
 
 <h3>Correo Electrónico</h3>
-<form action="/form" method="post">
-  <input type="text" name="email">
+  <input type="text" name="email" required>
 
 <h3>Teléfono</h3>
-<form action="/form" method="post">
-  <input type="text" name="phone">
+  <input type="text" name="phone" required>
 
-<h3>Peliculas</h3> 
-  <form action="/form" method="post">
-  <input type="checkbox" name="movie" value="Los Vengadores"> Los Vengadores<br>
-  <input type="checkbox" name="movie" value="American Sniper"> American Sniper<br>
-  <input type="checkbox" name="movie" value="Birdman"> Birdman<br>
-  <input type="checkbox" name="movie" value="Deadpool"> Deadpool<br>
-
-<h3>Precio</h3> 
-  <form action="/form" method="post">
-  <input type="checkbox" name="price" value="Entrada Simple: 6'50€"> Entrada Simple: 6'50€<br>
-  <input type="checkbox" name="price" value="Entrada con menú: 9'00€"> Entrada con menú: 9'00€<br>
-  <input type="checkbox" name="price" value="Entrada con gafas 3D: 9'50€"> Entrada con gafas 3D: 9'50€<br>
-
+<h3>Peliculas</h3>
+  <select name="movie">
+    <option value="Los Vengadores"> Los Vengadores</option>
+    <option value="American Sniper"> American Sniper</option>
+    <option value="Birdman"> Birdman</option>
+    <option value="Deadpool"> Deadpool</option>
+ </select>
+<br>
+<h3>Precio</h3>
+  <select name="price">
+    <option  value="Entrada Simple: 6'50€"> Entrada Simple: 6'50€</option>
+    <option  value="Entrada con menú: 9'00€"> Entrada con menú: 9'00€</option>
+    <option  value="Entrada con gafas 3D: 9'50€"> Entrada con gafas 3D: 9'50€</option>
+  </select>
+  <br>
 <input type="submit" value="Confirmar Reserva">
 </form>
 
 
-<!-- # <form method="get" action="/users/:user_id"> -->
-<!-- #  <input type="submit" value="User Profile"> -->
- 
+
+

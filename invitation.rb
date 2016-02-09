@@ -1,9 +1,10 @@
 require 'rubygems'
 require 'sinatra'
 require 'pony'
+require 'capybara/rspec'
 
 SITE_TITLE = "Invitation Sender"
-SITE_DESCRIPTION = "The best ticket sender service"	
+SITE_DESCRIPTION = "The best ticket sender service"
 
 	Pony.options = {
       :via => :smtp,
@@ -31,18 +32,17 @@ get '/error' do
 end
 
 post '/form' do
-  ticket_id = Time.now.to_i
-  
   @name = params[:name]
   @email = params[:email]
   @phone = params[:phone]
   @movie = params[:movie]
   @price = params[:price]
-
-  Pony.mail(:subject=> 'Ticket Confirmation ' , 
-    	:to => "#{@email}", 
+if @phone.size != 9 then redirect '/error' end
+if @name.size < 3 then redirect '/error' end
+  Pony.mail(:subject=> 'Ticket Confirmation ' ,
+    	:to => "#{@email}",
     	:html_body => "Thank you for buying through Invitation Sender. Please click on the following link to see the information you've selected. <a href='http://localhost:9393/form/infoticket/#{@name}/#{@email}/#{@phone}/#{@movie}/#{@price}'>Your Information</a> ")
-        
+
 
   erb :index, :locals => {'name' => @name, 'email' => @email, 'phone' => @phone, 'movie' => @movie, 'price' => @price}
 
@@ -54,9 +54,10 @@ get '/form/infoticket/:name/:email/:phone/:movie/:price' do
   @phone = params[:phone].gsub('+',' ')
   @movie = params[:movie].gsub('+',' ')
   @price = params[:price].gsub('+',' ')
+
   erb :confirm
 end
 
-not_found do 
+not_found do
 	halt 404, "Don't go in there"
 end
