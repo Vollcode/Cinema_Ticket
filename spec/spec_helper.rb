@@ -14,3 +14,7 @@ end
 
 # For RSpec 2.x and 3.x
 RSpec.configure { |c| c.include RSpecMixin }
+
+# heroku git:remote -a vast-savannah-96984
+# export SENDGRID_USERNAME=app47023151@heroku.com
+# export SENDGRID_PASSWORD=vhnoc44z5715

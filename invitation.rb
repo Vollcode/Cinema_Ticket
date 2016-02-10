@@ -4,20 +4,7 @@ require 'pony'
 require 'capybara/rspec'
 
 SITE_TITLE = "Invitation Sender"
-SITE_DESCRIPTION = "The best ticket sender service"
-
-	Pony.options = {
-      :via => :smtp,
-      :via_options => {
-        :address => 'smtp.sendgrid.net',
-        :port => '587',
-        :domain => 'heroku.com',
-        :user_name => ENV['SENDGRID_USERNAME'],
-        :password => ENV['SENDGRID_PASSWORD'],
-        :authentication => :plain,
-        :enable_starttls_auto => true
-      }
-}
+SITE_DESCRIPTION = "the best ticket sender service"
 
 get '/' do
  erb :logo
@@ -32,17 +19,11 @@ get '/error' do
 end
 
 post '/form' do
-  @name = params[:name]
-  @email = params[:email]
-  @phone = params[:phone]
-  @movie = params[:movie]
-  @price = params[:price]
-if @phone.size != 9 then redirect '/error' end
-if @name.size < 3 then redirect '/error' end
-  Pony.mail(:subject=> 'Ticket Confirmation ' ,
-    	:to => "#{@email}",
-    	:html_body => "Thank you for buying through Invitation Sender. Please click on the following link to see the information you've selected. <a href='http://localhost:9393/form/infoticket/#{@name}/#{@email}/#{@phone}/#{@movie}/#{@price}'>Your Information</a> ")
+  forms
+  if wrong_phone then redirect '/error' end
+  if wrong_name then redirect '/error' end
 
+  send_email
 
   erb :index, :locals => {'name' => @name, 'email' => @email, 'phone' => @phone, 'movie' => @movie, 'price' => @price}
 
@@ -54,10 +35,65 @@ get '/form/infoticket/:name/:email/:phone/:movie/:price' do
   @phone = params[:phone].gsub('+',' ')
   @movie = params[:movie].gsub('+',' ')
   @price = params[:price].gsub('+',' ')
-
   erb :confirm
 end
 
 not_found do
 	halt 404, "Don't go in there"
 end
+
+################################
+def send_email
+  Pony.mail(:subject=> 'Ticket Confirmation ' ,
+      :to => "#{@email}",
+      :html_body => "Thank you for buying through #{SITE_TITLE}, #{SITE_DESCRIPTION}. Please click on the following link to see the information you've selected. <a href='http://localhost:9393/form/infoticket/#{@name}/#{@email}/#{@phone}/#{@movie}/#{@price}'>Your Information</a> ")<br>
+end
+
+def wrong_phone
+  @phone.size != 9
+end
+
+def wrong_name
+ @name.size < 3 || @name.size > 20
+end
+
+def forms
+  form_name
+  form_email
+  form_phone
+  form_movie
+  form_price
+end
+
+def form_name
+  @name = params[:name]
+end
+
+def form_email
+  @email = params[:email]
+end
+
+def form_phone
+  @phone = params[:phone]
+end
+
+def form_movie
+  @movie = params[:movie]
+end
+
+def form_price
+  @price = params[:price]
+end
+
+  Pony.options = {
+      :via => :smtp,
+      :via_options => {
+        :address => 'smtp.sendgrid.net',
+        :port => '587',
+        :domain => 'heroku.com',
+        :user_name => ENV['SENDGRID_USERNAME'],
+        :password => ENV['SENDGRID_PASSWORD'],
+        :authentication => :plain,
+        :enable_starttls_auto => true
+      }
+}

@@ -1,4 +1,8 @@
-a.image {
-   padding: 50%
-    
+div.image { 
+   margin: auto;
+   align: center; 
+   display: inline-block; 
 }
+
+
+
